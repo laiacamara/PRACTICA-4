@@ -2,29 +2,32 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define salt "\n"
+
 /*Programa 1*/
 /*My_head*/
 
-int a,num;
 char buffer[1024];
-char c;
-int n_lm = 0;
 void my_head(const char *arxiu, int lm){
-        if ((a = open(arxiu,O_RDONLY))<0){
+        int fd = open(arxiu,O_RDONLY);
+        if (fd == -1) {
                 perror("ERROR: l'arxiu no existeix.");
+                close(fd);
+                return;
+        }
+        if (lm <= 0) {
+                perror("ERROR: el número de línies és negatiu. ");
+                close(fd);
+                return;
         } else {
-                if (lm <= 0){
-                        perror("ERROR: el número de línies és negatiu. ");
-                } else {
-                        while (read(a, &c, 1) != 0 && n_lm < lm) {
-                                if(&c == salt) {
+                char c;
+                int n_lm = 0;
+                while (read(fd, &c, 1) != 0 && n_lm < lm) {
+                                if(c == '\n') {
                                         n_lm++;
-                                        printf("%s", &c);
+                                        printf("%c", c);
                                 } else {
-                                        printf("%s", &c);
+                                        printf("%c", c);
                                 }
-                        }
                 }
         }
 }
