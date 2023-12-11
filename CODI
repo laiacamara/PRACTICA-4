@@ -1,0 +1,42 @@
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#define salt "\n"
+/*Programa 1*/
+/*My_head*/
+
+int a,num;
+char buffer[1024];
+char c;
+int n_lm = 0;
+void my_head(const char *arxiu, int lm){
+        if ((a = open(arxiu,O_RDONLY))<0){
+                perror("ERROR: l'arxiu no existeix.");
+        } else {
+                if (lm <= 0){
+                        perror("ERROR: el número de línies és negatiu. ");
+                } else {
+                        while (read(a, &c, 1) != 0 && n_lm < lm) {
+                                if(&c == salt) {
+                                        n_lm++;
+                                        printf("%s", &c);
+                                } else {
+                                        printf("%s", &c);
+                                }
+                        }
+                }
+        }
+}
+
+
+int main() {
+        char arxiu[100];
+        int lm = 0;
+        printf("Introdueix el nom del arxiu a utilitzar: ");
+        scanf("%s",arxiu);
+        printf("Introdueix el nombre de línies a mostrar: ");
+        scanf("%d",&lm);
+        my_head(arxiu,lm);
+        return 0;
+}
