@@ -32,7 +32,7 @@ void my_head(const char *arxiu, int lm){
         }
 }
 
-
+/*MAIN*/
 int main() {
         char arxiu[100];
         int lm = 0;
