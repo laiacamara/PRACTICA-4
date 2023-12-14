@@ -32,7 +32,7 @@ void my_head(const char *arxiu, int lm){
         }
 }
 
-/*MAIN*/
+/*MAIN PROGRAMA 1*/
 int main() {
         char arxiu[100];
         int lm = 0;
@@ -43,3 +43,63 @@ int main() {
         my_head(arxiu,lm);
         return 0;
 }
+
+
+/*PROGRAMA 2*/
+/*MY_MV*/
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+void My_mv(const char *arxiuOriginal, const char *nouNom) {
+    int desc = open(nouNom, O_CREAT | O_WRONLY | O_TRUNC, S_IRWXU);
+    if (desc == -1) {
+        perror("Error al crear el nou arxiu.");
+        return;
+    }
+
+    int descArxiuOriginal = open(arxiuOriginal, O_RDONLY);
+    if (descArxiuOriginal == -1) {
+        perror("Error a l'obrir l'arxiu original");
+        close(desc);
+        return;
+    }
+
+    char buffer[406];
+    ssize_t bytesLlegits;
+    while ((bytesLlegits = read(descArxiuOriginal, buffer, sizeof(buffer))) > 0) {
+        write(desc, buffer, bytesLlegits);
+    }
+
+    close(descArxiuOriginal);
+    close(desc);
+
+    if (unlink(arxiuOriginal) == -1) {
+        perror("Error al borrar l'arxiu original");
+    }
+
+    printf("L'arxiu ha estat mogut.\n");
+}
+
+/*MAIN PROGRAMA 2*/
+int main() {
+    char arxiuOriginal[100];
+    char nouNom[100];
+    char opcion;
+
+    while (1) {
+        printf("Escriu el nom de l'arxiu a moure: ");
+        scanf("%s", arxiuOriginal);
+
+        printf("Escriu el nou nom: ");
+        scanf("%s", nouNom);
+
+        My_mv(arxiuOriginal, nouNom);
+        break;
+    }
+
+    return 0;
+}
+
+
